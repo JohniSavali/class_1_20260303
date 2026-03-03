@@ -7,6 +7,10 @@ import os
 import requests
 import json
 from dotenv import load_dotenv
+import urllib3
+
+# 禁用 SSL 警告
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 載入環境變數
 load_dotenv()
@@ -21,7 +25,8 @@ def debug_api_response():
     }
     
     try:
-        response = requests.get(url, params=params)
+        # 設置 SSL 驗證選項，忽略證書驗證問題
+        response = requests.get(url, params=params, verify=False)
         response.raise_for_status()
         data = response.json()
         

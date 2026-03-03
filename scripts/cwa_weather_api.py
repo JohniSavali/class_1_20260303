@@ -11,6 +11,10 @@ import json
 from datetime import datetime
 import pandas as pd
 from dotenv import load_dotenv
+import urllib3
+
+# 禁用 SSL 警告
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 載入環境變數
 load_dotenv()
@@ -33,7 +37,8 @@ class CWAWeatherAPI:
         }
         
         try:
-            response = requests.get(url, params=params)
+            # 設置 SSL 驗證選項，忽略證書驗證問題
+            response = requests.get(url, params=params, verify=False)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
@@ -80,6 +85,9 @@ class CWAWeatherAPI:
         if filename is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"outputs/weather_stations_{timestamp}.csv"
+        
+        # 確保 outputs 目錄存在
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         
         df = pd.DataFrame(stations_data)
         df.to_csv(filename, index=False, encoding='utf-8-sig')
