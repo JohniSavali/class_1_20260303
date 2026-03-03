@@ -57,7 +57,7 @@ Thumbs.db
 # data/*.tiff
 
 # Output files
-outputs/*.png
+# outputs/*.png
 outputs/*.jpg
 outputs/*.pdf
 outputs/*.html
